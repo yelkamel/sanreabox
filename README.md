@@ -1,56 +1,58 @@
-# Welcome to your Expo app 👋
+# Sanreabox
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Bac à sable React Native / Expo (SDK 57, Expo Router) : un squelette d'app mobile qui
+réunit onboarding, authentification, tab bar, drawer, un tableau de bord SaaS et une
+marketplace. **Interface uniquement** — aucun backend, les données sont factices et l'état
+(session, panier) vit en mémoire.
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Démarrer
 
 ```bash
-npm run reset-project
+npm install
+npx expo start        # puis i (iOS), a (Android) ou w (web)
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Parcours
 
-### Other setup steps
+Onboarding (3 étapes) → connexion / inscription → app.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+- **Tab bar** : Accueil, Explorer, Favoris, Profil
+- **Drawer** : utilisateur en haut, liens (Accueil, Tableau de bord, Marketplace,
+  Paramètres), déconnexion en bas
+- **SaaS** : tableau de bord avec cartes de statistiques, paramètres
+- **Marketplace** : liste de produits avec recherche, détail produit, panier, profil vendeur
 
-## Learn more
+N'importe quel email et mot de passe sont acceptés à la connexion.
 
-To learn more about developing your project with Expo, look at the following resources:
+## Structure
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```
+src/
+├── app/                    routes (Expo Router)
+│   ├── _layout.tsx         layout racine : providers + routes protégées
+│   ├── onboarding.tsx
+│   ├── (auth)/             login, register
+│   ├── (drawer)/           drawer : dashboard, marketplace, settings
+│   │   └── (tabs)/         index, explore, favorites, profile
+│   ├── product/[id].tsx
+│   ├── seller/[id].tsx
+│   ├── cart.tsx
+│   └── +not-found.tsx
+├── components/             composants d'écran, et ui/ pour les briques réutilisables
+├── constants/              theme.ts (couleurs, espacements), mock-data.ts
+└── hooks/                  use-auth, use-cart, use-theme
+```
 
-## Join the community
+## Brancher un backend
 
-Join our community of developers creating universal apps.
+- Authentification : remplacer le corps de `signIn` / `signUp` / `signOut` dans
+  `src/hooks/use-auth.tsx`.
+- Données : remplacer `src/constants/mock-data.ts`.
+- Paiement : le bouton « Passer la commande » de `src/app/cart.tsx` est désactivé en attendant.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Vérifier
+
+```bash
+npx tsc --noEmit
+npx expo lint
+```
